@@ -1,1 +1,39 @@
 /* CURRENTLY IN: styles/main.css */
+html,body {
+	height: 100%;
+	min-height: 100%;
+	margin: 0;
+	padding: 0;
+	background: rgba(74, 77, 90, 1);
+}
+
+canvas {
+	position: absolute;
+	display: block;
+	background: rgba(74, 77, 90, 0);
+	z-index: 1;
+}
+
+#container {
+	position: relative;
+}
+
+#topside {
+	z-index: 3;
+	background-color: transparent;
+	position: absolute;
+	height: 300px;
+	width: 400px;
+	/*margin: -150px 0 0 -200;*/
+	top: 40px;
+	left: 40px;
+}
+
+.topCanvas {
+	background: transparent;
+	z-index: 2
+}
+
+.bottomcanvas {
+	z-index: 1
+}
