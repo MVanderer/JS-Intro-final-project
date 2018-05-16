@@ -51,49 +51,64 @@ $.ajax({ url: profBH, type: "get", dataType: "jsonp" })
 			//Put up user name as the page header - without any header tags
 			let bHname = behanceUser.user.first_name + " " + behanceUser.user.last_name;
 			
-			c.globalCompositeOperation = "source-over";
-			c.font = "40px Helvetica";
-			c.fillStyle = "rgba(255, 255, 255, 1)"
-			c.textAlign = "center";
-			c.fillText(bHname, canvas.width*0.5 , canvas.height*0.08);
+			
+			watcher.addEventListener("click",
+				function (){
+					drawFront();
+				});
 
-			//Draw the hero image, pulled from the behance API by random index
-			let img = new Image;
-			let imagIndex = Math.floor(Math.random()*behanceProject.project.modules.length);
-			console.log(imagIndex);
 
-			img.src = behanceProject.project.modules[imagIndex].src;
-			let maxWidth = behanceProject.project.modules[imagIndex].dimensions.original.width;
-			let maxHeight = behanceProject.project.modules[imagIndex].dimensions.original.height;
+			const drawFront = () => {
+				//Wipe the board
+				c.clearRect(0,0,canvas.width,canvas.height);
 
-			//Set the margins
-			let allotWidth = canvas.width*0.85;
-			let allotHeight = canvas.height*0.85;
+				//Write the name pulled from the API
+				//c.globalCompositeOperation = "source-over";
+				c.font = "40px Helvetica";
+				c.fillStyle = "rgba(255, 255, 255, 1)"
+				c.textAlign = "center";
+				c.fillText(bHname, canvas.width*0.5 , canvas.height*0.08);
 
-			//Figure out by how much to squeeze the image if necessary
-			let scale = 1;
+				//Draw the hero image, pulled from the behance API by random index
 
-			if (maxHeight > allotHeight || maxWidth > allotWidth) {
-				let scaleH = allotHeight / maxHeight;
-				let scaleW = allotWidth / maxWidth;
-				if (scaleW > scaleH) {scale = scaleH}
-					else {scale = scaleW}
-						console.log(scale);
+				let img = new Image;
+				let imagIndex = Math.floor(Math.random()*behanceProject.project.modules.length);
+
+				img.src = behanceProject.project.modules[imagIndex].src;
+				let maxWidth = behanceProject.project.modules[imagIndex].dimensions.original.width;
+				let maxHeight = behanceProject.project.modules[imagIndex].dimensions.original.height;
+
+				//Set the margins
+				let allotWidth = canvas.width*0.85;
+				let allotHeight = canvas.height*0.85;
+
+				//Figure out by how much to squeeze the image if necessary
+				let scale = 1;
+
+				if (maxHeight > allotHeight || maxWidth > allotWidth) {
+					let scaleH = allotHeight / maxHeight;
+					let scaleW = allotWidth / maxWidth;
+					if (scaleW > scaleH) {scale = scaleH}
+						else {scale = scaleW}
+							console.log(scale);
+					}
+
+				//Scale proportionally and draw in the middle
+				maxWidth = scale*maxWidth;
+				maxHeight = scale*maxHeight;
+
+				let xPos = canvas.width/2 - maxWidth/2;
+				let yPos = canvas.height*0.10;
+				img.onload = () => {
+					c.drawImage(img, xPos, yPos, maxWidth, maxHeight); };
+
+					
+
 				}
 
-			//Scale proportionally and draw in the middle
-			maxWidth = scale*maxWidth;
-			maxHeight = scale*maxHeight;
-
-			let xPos = canvas.width/2 - maxWidth/2;
-			let yPos = canvas.height*0.10;
-			img.onload = () => {
-				c.drawImage(img, xPos, yPos, maxWidth, maxHeight); };
-
-				
-
-			}
-		);
+				drawFront();
+		}
+	);
 });
 
 
@@ -105,7 +120,7 @@ const renderBGrid = () => {
 	
 	cBg.clearRect(0,0,canvas.width,canvas.height);
 
-	for (let i = 1; i < 50; i++) {
+	for (let i = 1; i < 350; i++) {
 		cBg.beginPath();
 		cBg.moveTo(0,0);
 		let x = canvas.width*Math.random();
@@ -133,12 +148,15 @@ const renderBGrid = () => {
 
 renderBGrid();
 
+
 const watcher = document.getElementById("topside");
+
 watcher.style.top = (canvas.height/2 - 150) + 'px';
 watcher.style.left = (canvas.width/2 - 200) + 'px';
 
 watcher.addEventListener("mouseenter",
 	function (){
+		
 		let ranc = "rgba(44, 47, 50, 1)";
 		document.body.style.background = ranc;
 	});
@@ -149,7 +167,6 @@ watcher.addEventListener("mouseleave",
 		document.body.style.background = ranc;
 	});
 
-watcher.addEventListener("click",
-	function (){
-		renderBGrid();
-	});
+watcher.addEventListener("mousemove", function(){
+	setTimeout(renderBGrid, 1000);
+});

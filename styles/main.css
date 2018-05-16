@@ -24,9 +24,9 @@ canvas {
 	position: absolute;
 	height: 300px;
 	width: 400px;
-	/*margin: -150px 0 0 -200;*/
 	top: 40px;
 	left: 40px;
+	cursor: pointer;
 }
 
 .topCanvas {
