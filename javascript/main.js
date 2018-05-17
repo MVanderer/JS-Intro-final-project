@@ -36,6 +36,10 @@ let behanceProject = {};
 //Call upon the API data.
 //This part ran into all sorts of permission errors. Only $.ajax worked
 
+let imagIndex = 0;
+
+
+
 $.ajax({ url: profBH, type: "get", dataType: "jsonp" })
 .done(function(result){behanceUser = result; console.log(result); })
 .fail((error) => {console.log("Ajax request fails"); console.log(error); })
@@ -56,8 +60,7 @@ $.ajax({ url: profBH, type: "get", dataType: "jsonp" })
 				function (){
 					drawFront();
 				});
-
-
+			
 			const drawFront = () => {
 				//Wipe the board
 				c.clearRect(0,0,canvas.width,canvas.height);
@@ -72,8 +75,8 @@ $.ajax({ url: profBH, type: "get", dataType: "jsonp" })
 				//Draw the hero image, pulled from the behance API by random index
 
 				let img = new Image;
-				let imagIndex = Math.floor(Math.random()*behanceProject.project.modules.length);
-
+				
+				if (imagIndex === behanceProject.project.modules.length) {imagIndex =0;};
 				img.src = behanceProject.project.modules[imagIndex].src;
 				let maxWidth = behanceProject.project.modules[imagIndex].dimensions.original.width;
 				let maxHeight = behanceProject.project.modules[imagIndex].dimensions.original.height;
@@ -102,7 +105,7 @@ $.ajax({ url: profBH, type: "get", dataType: "jsonp" })
 				img.onload = () => {
 					c.drawImage(img, xPos, yPos, maxWidth, maxHeight); };
 
-					
+					imagIndex++;
 
 				}
 
